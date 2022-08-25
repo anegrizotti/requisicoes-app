@@ -1,3 +1,16 @@
-.bg-ligth{
+.bg-ligth {
   background-color: rgb(245, 245, 245);
 }
+
+.links {
+  font-size: 18px;
+}
+
+.navbar {
+  box-shadow: rgba(70, 4, 86, 0.515) 0px 3px 8px;
+}
+
+.nav-link:hover{
+  color: rgba(255, 255, 255, 0.696) !important;
+}
+
