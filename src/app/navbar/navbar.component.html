@@ -1,28 +1,30 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" routerLink="/">
-      <img src="../../assets/logo-academia.svg" alt="" width="30" height="24">
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <div class="logo">
+      <a class="nav-item ms-auto d-none d-lg-block" routerLink="/">
+        <img style="margin-right: 50px;" src="../../assets/logo-academia.svg" alt="" width="45" height="39">
+      </a>
+    </div>
+    <button (click)="estaColapsada = !estaColapsada" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="links w-100" *ngIf="usuarioLogado | async">
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup" [ngbCollapse]="!estaColapsada">
+      <div class="links w-100 text-center" *ngIf="usuarioLogado | async">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link active fw-semibold" aria-current="page" routerLink="/departamentos">Departamentos</a>
+            <a class="nav-link active fw-semibold" aria-current="page" routerLink="/departamentos">Departamento1</a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link active fw-semibold" aria-current="page" routerLink="/departamentos">Departamentos</a>
+            <a class="nav-link active fw-semibold" aria-current="page" routerLink="/departamentos">Departamento2</a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link active fw-semibold" aria-current="page" routerLink="/departamentos">Departamentos</a>
+            <a class="nav-link active fw-semibold" aria-current="page" routerLink="/departamentos">Departamento3</a>
           </li>
 
-          <div class="ms-auto">
-            <a role="button" class="btn btn-outline-light px-5" (click)="sair();">Sair</a>
+          <div class="ms-0 ms-md-auto">
+            <a style="margin-top: 3px;" role="button" class="btn btn-outline-light px-5" (click)="sair();">Sair</a>
           </div>
         </ul>
       </div>
