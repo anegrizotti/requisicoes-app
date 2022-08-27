@@ -2,6 +2,14 @@
   background-color: rgb(245, 245, 245);
 }
 
+.border {
+  box-shadow: rgba(70, 4, 86, 0.566) 0px 3px 8px;
+}
+
+.card {
+  box-shadow: rgba(70, 4, 86, 0.566) 0px 3px 8px;
+}
+
 .links {
   font-size: 18px;
 }
@@ -12,12 +20,4 @@
 
 .nav-link:hover{
   color: rgba(255, 255, 255, 0.696) !important;
-}
-
-.border {
-  box-shadow: rgba(70, 4, 86, 0.566) 0px 3px 8px;
-}
-
-.table {
-  box-shadow: rgba(70, 4, 86, 0.566) 0px 3px 8px;
 }
