@@ -1,0 +1,112 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-md-10 col-lg-9 mx-auto">
+      <div class="text-center text-md-start">
+        <h1 class="fw-bold">Equipamentos</h1>
+          <div class="d-grid gap-2 d-md-block mt-4">
+            <button
+              (click)="gravar(modal)"
+              type="button"
+              class="btn btn-secondary me-md-1 col-md-2">
+              <i class="pi pi-plus me-2"></i>Inserir
+            </button>
+            <a
+              role="button"
+              class="btn btn-outline-secondary col-md-2"
+              routerLink="/painel">
+              <i class="pi pi-arrow-left me-2"></i>Voltar
+             </a>
+          </div>
+
+        <section id="tabela">
+          <div class="card text-bg-dark border-secondary mt-3 rounded-4 w-100 fs-6">
+            <div class="card-body">
+              <table class="table table-dark table-hover">
+                <thead class="thead-ligth fs-5 text-center">
+                  <tr>
+                    <th>N° de Série</th>
+                    <th>Nome</th>
+                    <th>Preço</th>
+                    <th>Data de Fabricação</th>
+                  </tr>
+                </thead>
+                <tbody class="text-center">
+                  <tr *ngFor="let equipamento of (equipamentos$ | async)">
+                    <td class="align-middle">{{ equipamento.numeroSerie }}</td>
+                    <td class="align-middle">{{ equipamento.nome }}</td>
+                    <td class="align-middle">{{ equipamento.preco | currency: 'BRL' }}</td>
+                    <td class="align-middle">{{ equipamento.dataFabricacao | date: "dd/MM/yyyy" }}</td>
+                    <td class="d-grid d-md-block align-middle">
+                      <button
+                        type="button"
+                        (click)="gravar(modal, equipamento)"
+                        class="btn btn-outline-warning me-0 me-md-1 mb-1 mb-md-auto">
+                        <i class="pi pi-pencil"></i>
+                      </button>
+
+                      <button
+                        (click)="excluir(equipamento)"
+                        type="button"
+                        class="btn btn-outline-danger">
+                        <i class="pi pi-trash"></i>
+                    </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #modal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{ tituloModal }} de Equipamento</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('fechar')"></button>
+  </div>
+    <form [formGroup]="form" (ngSubmit)="modal.close('gravar')">
+      <div class="modal-body">
+        <div class="form-group mb-3">
+          <label for="numeroSerie" class="form-label">N° de Série:</label>
+          <input formControlName="numeroSerie"
+            class="form-control"
+            type="text"
+            placeholder="Digite o número de série do equipamento">
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="nome" class="form-label">Nome:</label>
+          <input formControlName="nome"
+            class="form-control"
+            type="text"
+            placeholder="Digite o nome do equipamento">
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="preco" class="form-label">Preço:</label>
+          <input currencyMask
+            formControlName="preco"
+            class="form-control"
+            min="0"
+            [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left'}"
+            placeholder="R$ 0,00">
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="dataFabricacao">Data de Fabricação:</label>
+          <input formControlName="dataFabricacao"
+            class="form-control"
+            type="date"
+            placeholder="Digite a data de fabricação do equipamento">
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-dark col-md-3">Gravar</button>
+        <button type="button" class="btn btn-outline-dark col-md-3" (click)="modal.dismiss('fechar')">Cancelar</button>
+      </div>
+    </form>
+</ng-template>
