@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { Equipamento } from './models/equipamento.model';
 import { EquipamentoService } from './services/equipamento.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-equipamento',
@@ -17,7 +18,8 @@ export class EquipamentoComponent implements OnInit {
   constructor(
     private equipamentoService: EquipamentoService,
     private modalService: NgbModal,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -68,24 +70,33 @@ export class EquipamentoComponent implements OnInit {
 
       if(!equipamento) {
         await this.equipamentoService.inserir(this.form.value);
+        this.toastr.success('Equipamento inserido com sucesso.', 'Inserção de Equipamento');
       }
       else{
         await this.equipamentoService.editar(this.form.value);
+        this.toastr.success('Equipamento editado com sucesso.', 'Edição de Equipamento');
       }
 
-      console.log(`O equipamento foi salvo com sucesso.`);
+    } catch (error: any) {
 
-    } catch (_error) {
+      if(error === "Ítem inválido")
+        this.toastr.error('Falha ao inserir o equipamento', 'Inserção de Equipamento')
+      else {
+        this.toastr.error('Falha ao editar o equipamento', 'Edição de Equipamento')
+      }
 
     }
+
   }
 
-  public excluir(departamento: Equipamento) {
-    this.equipamentoService.excluir(departamento);
-  }
+  public async excluir(equipamento: Equipamento) {
+    try {
+      await this.equipamentoService.excluir(equipamento);
+      this.toastr.success('Equipamento excluído com sucesso.', 'Exclusão de Equipamento');
 
-  public formatarCampo() {
-    
+    } catch (error) {
+      this.toastr.error('Falha ao excluír o equipamento.', 'Exclusão de Equipamento');
+    }
   }
 
 }

@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { Departamento } from './models/departamento.model';
 import { DepartamentoService } from './services/departamento.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-departamento',
@@ -16,7 +17,8 @@ export class DepartamentoComponent implements OnInit {
   constructor(
     private departamentoService: DepartamentoService,
     private modalService: NgbModal,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private toastr: ToastrService
     ) { }
 
   ngOnInit(): void {
@@ -57,20 +59,32 @@ export class DepartamentoComponent implements OnInit {
 
       if(!departamento) {
         await this.departamentoService.inserir(this.form.value);
+        this.toastr.success('Departamento inserido com sucesso.', 'Inserção de Departamento');
       }
       else{
         await this.departamentoService.editar(this.form.value);
+        this.toastr.success('Departamento editado com sucesso.', 'Edição de Departamento');
       }
 
-      console.log(`O departamento foi salvo com sucesso.`);
+    } catch (error: any) {
 
-    } catch (_error) {
+      if(error === "Ítem inválido")
+        this.toastr.error('Falha ao inserir o departamento', 'Inserção de Departamento')
+      else {
+        this.toastr.error('Falha ao editar o departamento', 'Edição de Departamento')
+      }
 
     }
   }
 
-  public excluir(departamento: Departamento) {
-    this.departamentoService.excluir(departamento);
+  public async excluir(departamento: Departamento) {
+    try {
+      await this.departamentoService.excluir(departamento);
+      this.toastr.success('Departamento excluído com sucesso.', 'Exclusão de Departamento');
+
+    } catch (error) {
+      this.toastr.error('Falha ao excluír o departamento.', 'Exclusão de Departamento');
+    }
   }
 
 }
