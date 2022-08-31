@@ -19,7 +19,9 @@ import { NgxCurrencyModule } from "ngx-currency";
     EquipamentoRoutingModule,
     NgxCurrencyModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot({
+      positionClass: 'toast-bottom-right'
+    })
   ]
 })
 export class EquipamentoModule { }

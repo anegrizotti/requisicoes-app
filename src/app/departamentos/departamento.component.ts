@@ -68,9 +68,9 @@ export class DepartamentoComponent implements OnInit {
 
     } catch (error: any) {
 
-      if(error === "Ítem inválido")
+      if(error === "Ítem inválido" && error != "fechar" && error != "0" && error != "1")
         this.toastr.error('Falha ao inserir o departamento', 'Inserção de Departamento')
-      else {
+      else if(error != "fechar" && error != "0" && error != "1") {
         this.toastr.error('Falha ao editar o departamento', 'Edição de Departamento')
       }
 
@@ -83,7 +83,8 @@ export class DepartamentoComponent implements OnInit {
       this.toastr.success('Departamento excluído com sucesso.', 'Exclusão de Departamento');
 
     } catch (error) {
-      this.toastr.error('Falha ao excluír o departamento.', 'Exclusão de Departamento');
+      if(error != "fechar" && error != "0" && error != "1")
+        this.toastr.error('Falha ao excluír o departamento.', 'Exclusão de Departamento');
     }
   }
 

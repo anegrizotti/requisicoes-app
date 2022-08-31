@@ -79,9 +79,9 @@ export class EquipamentoComponent implements OnInit {
 
     } catch (error: any) {
 
-      if(error === "Ítem inválido")
+      if(error === "Ítem inválido" && error != "fechar" && error != "0" && error != "1")
         this.toastr.error('Falha ao inserir o equipamento', 'Inserção de Equipamento')
-      else {
+      else if(error != "fechar" && error != "0" && error != "1") {
         this.toastr.error('Falha ao editar o equipamento', 'Edição de Equipamento')
       }
 
@@ -95,7 +95,8 @@ export class EquipamentoComponent implements OnInit {
       this.toastr.success('Equipamento excluído com sucesso.', 'Exclusão de Equipamento');
 
     } catch (error) {
-      this.toastr.error('Falha ao excluír o equipamento.', 'Exclusão de Equipamento');
+      if(error != "fechar" && error != "0" && error != "1")
+        this.toastr.error('Falha ao excluír o equipamento.', 'Exclusão de Equipamento');
     }
   }
 

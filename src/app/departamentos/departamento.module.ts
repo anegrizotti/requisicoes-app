@@ -20,7 +20,9 @@ import { NgxMaskModule, IConfig } from 'ngx-mask'
     ReactiveFormsModule,
     DepartamentoRoutingModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      positionClass: 'toast-bottom-right'
+    }),
     NgxMaskModule.forRoot()
   ]
 })
