@@ -16,10 +16,8 @@ import { LoginComponent } from './auth/login/login.component';
 import { AuthenticationService } from './auth/services/authentication.service';
 import { PainelComponent } from './painel/painel.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { DepartamentoModule } from './departamentos/departamento.module';
-import { EquipamentoModule } from './equipamentos/equipamento.module';
-import { FuncionarioModule } from './funcionarios/funcionario.module';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -30,16 +28,16 @@ import { FuncionarioModule } from './funcionarios/funcionario.module';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     ReactiveFormsModule,
     NgbModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
-
-    DepartamentoModule,
-    EquipamentoModule,
-    FuncionarioModule
+    ToastrModule.forRoot({
+      positionClass: 'toast-bottom-right'
+    }),
   ],
   providers: [AuthenticationService],
   bootstrap: [AppComponent]

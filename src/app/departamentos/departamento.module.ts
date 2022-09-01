@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToastrModule } from 'ngx-toastr';
 
 import { DepartamentoRoutingModule } from './departamento-routing.module';
 import { DepartamentoComponent } from './departamento.component';
@@ -19,10 +17,6 @@ import { NgxMaskModule, IConfig } from 'ngx-mask'
     NgbModule,
     ReactiveFormsModule,
     DepartamentoRoutingModule,
-    BrowserAnimationsModule,
-    ToastrModule.forRoot({
-      positionClass: 'toast-bottom-right'
-    }),
     NgxMaskModule.forRoot()
   ]
 })

@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToastrModule } from 'ngx-toastr';
 
 import { EquipamentoRoutingModule } from './equipamento-routing.module';
 import { EquipamentoComponent } from './equipamento.component';
@@ -17,11 +15,7 @@ import { NgxCurrencyModule } from "ngx-currency";
     CommonModule,
     ReactiveFormsModule,
     EquipamentoRoutingModule,
-    NgxCurrencyModule,
-    BrowserAnimationsModule,
-    ToastrModule.forRoot({
-      positionClass: 'toast-bottom-right'
-    })
+    NgxCurrencyModule
   ]
 })
 export class EquipamentoModule { }
