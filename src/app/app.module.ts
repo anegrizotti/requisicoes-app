@@ -18,6 +18,7 @@ import { PainelComponent } from './painel/painel.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { DepartamentoModule } from './departamentos/departamento.module';
 import { EquipamentoModule } from './equipamentos/equipamento.module';
+import { FuncionarioModule } from './funcionarios/funcionario.module';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { EquipamentoModule } from './equipamentos/equipamento.module';
     AngularFirestoreModule,
 
     DepartamentoModule,
-    EquipamentoModule
+    EquipamentoModule,
+    FuncionarioModule
   ],
   providers: [AuthenticationService],
   bootstrap: [AppComponent]
