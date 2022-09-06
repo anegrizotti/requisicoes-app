@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { map, Observable } from 'rxjs';
 import { Departamento } from 'src/app/departamentos/models/departamento.model';
+import { Equipamento } from 'src/app/equipamentos/models/equipamento.model';
 import { Requisicao } from '../models/requisicao.model';
 
 @Injectable({
@@ -33,42 +34,29 @@ export class RequisicaoService {
   }
 
    public selecionarTodos(): Observable<Requisicao[]> {
-    return this.registros.valueChanges();
-    // return this.registros.valueChanges()
-    //   .pipe(
-    //     map((requisicoes: Requisicao[]) => {
-    //       requisicoes.forEach(requisicao => {
-    //         this.firestore
-    //           .collection<Departamento>("departamentos")
-    //           .doc(requisicao.departamentoId)
-    //           .valueChanges()
-    //           .subscribe(x => requisicao.departamento = x);
-    //       },
+    return this.registros.valueChanges().pipe(
+      map((requisicoes: Requisicao[]) => {
+        requisicoes.forEach((requisicao => {
+          if(requisicao.departamentoId != null) {
+            this.firestore
+              .collection<Departamento>('departamentos')
+              .doc(requisicao.departamentoId)
+              .valueChanges()
+              .subscribe((x) => (requisicao.departamento = x));
+          }
 
-    //     map((requisicoes: Requisicao[]) => {
-    //       requisicoes.forEach(requisicao => {
-    //         this.firestore
-    //           .collection<Departamento>("departamentos")
-    //           .doc(requisicao.departamentoId)
-    //           .valueChanges()
-    //           .subscribe(x => requisicao.departamento = x);
+          if(requisicao.equipamentoId != null) {
+            this.firestore
+              .collection<Equipamento>('equipamentos')
+              .doc(requisicao.equipamentoId)
+              .valueChanges()
+              .subscribe((x) => (requisicao.equipamento = x));
+          }
 
-    //       },
+        }));
 
-    //       map((requisicoes: Requisicao[]) => {
-    //         requisicoes.forEach(requisicao => {
-    //           this.firestore
-    //             .collection<Departamento>("departamentos")
-    //             .doc(requisicao.departamentoId)
-    //             .valueChanges()
-    //             .subscribe(x => requisicao.departamento = x);
-
-    //         ))}))
-
-    //       return requisicoes;
-
-    //     })
-
-    //   )
-    }
+        return requisicoes;
+      }
+    ));
+  }
 }

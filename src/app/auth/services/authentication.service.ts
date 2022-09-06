@@ -25,6 +25,19 @@ export class AuthenticationService {
     return this.auth.signOut();
    }
 
+   public getUser(): Promise<firebase.User | null> {
+    console.log(this.auth.currentUser);
+    return this.auth.currentUser;
+  }
+
+  public updateUser(usuario: firebase.User | null) {
+    return this.auth.updateCurrentUser(usuario);
+  }
+
+  public getUid() {
+    return firebase.auth().currentUser?.uid.toString();
+  }
+
    public resetarSenha(email: string): Promise<void> {
     return this.auth.sendPasswordResetEmail(email);
    }
