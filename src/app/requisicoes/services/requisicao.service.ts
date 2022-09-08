@@ -3,6 +3,7 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/comp
 import { map, Observable } from 'rxjs';
 import { Departamento } from 'src/app/departamentos/models/departamento.model';
 import { Equipamento } from 'src/app/equipamentos/models/equipamento.model';
+import { Funcionario } from 'src/app/funcionarios/models/funcionario.model';
 import { Requisicao } from '../models/requisicao.model';
 
 @Injectable({
@@ -33,30 +34,45 @@ export class RequisicaoService {
     return this.registros.doc(registro.id).delete();
   }
 
-   public selecionarTodos(): Observable<Requisicao[]> {
-    return this.registros.valueChanges().pipe(
-      map((requisicoes: Requisicao[]) => {
-        requisicoes.forEach((requisicao => {
-          if(requisicao.departamentoId != null) {
+  public selecionarTodos(): Observable<Requisicao[]> {
+    return this.registros.valueChanges()
+      .pipe(
+        map(requisicoes => {
+          requisicoes.forEach(req => {
             this.firestore
-              .collection<Departamento>('departamentos')
-              .doc(requisicao.departamentoId)
+              .collection<Departamento>("departamentos")
+              .doc(req.departamentoId)
               .valueChanges()
-              .subscribe((x) => (requisicao.departamento = x));
-          }
+              .subscribe(d => req.departamento = d);
 
-          if(requisicao.equipamentoId != null) {
             this.firestore
-              .collection<Equipamento>('equipamentos')
-              .doc(requisicao.equipamentoId)
+              .collection<Funcionario>("funcionarios")
+              .doc(req.funcionarioId)
               .valueChanges()
-              .subscribe((x) => (requisicao.equipamento = x));
-          }
+              .subscribe(f => req.funcionario = f);
 
-        }));
+            if (req.equipamentoId) {
+              this.firestore
+                .collection<Equipamento>("equipamentos")
+                .doc(req.equipamentoId)
+                .valueChanges()
+                .subscribe(e => req.equipamento = e);
+            }
 
-        return requisicoes;
-      }
-    ));
+          });
+
+          return requisicoes;
+        })
+      );
   }
+
+  public selecionarRequisicoesFuncionarioAtual(id: string) {
+    return this.selecionarTodos()
+      .pipe(
+        map(requisicoes => {
+          return requisicoes.filter(req => req.funcionarioId === id);
+        })
+      )
+  }
+
 }

@@ -55,14 +55,14 @@ export class RequisicaoComponent implements OnInit, OnDestroy {
 
     this.departamentos$ = this.departamentoService.selecionarTodos();
     this.equipamentos$ = this.equipamentoService.selecionarTodos();
-    this.requisicoes$ = this.requisicaoService.selecionarTodos();
 
     this.processoAutenticado$ = this.authService.usuarioLogado.subscribe(usuario => {
       const email: string = usuario?.email!;
 
       this.funcionarioService.selecionarFuncionarioLogado(email)
         .subscribe(funcionario => {
-          this.funcionarioLogadoId = funcionario.id
+          this.funcionarioLogadoId = funcionario.id;
+          this.requisicoes$ = this.requisicaoService.selecionarRequisicoesFuncionarioAtual(this.funcionarioLogadoId);
         })
     })
 
