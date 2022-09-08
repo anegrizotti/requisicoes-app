@@ -126,12 +126,11 @@ export class RequisicaoComponent implements OnInit {
 
       if(!requisicao) {
         this.form.get("dataAbertura")?.setValue(new Date(Date.now()).toLocaleString());
-        this.form.get("funcionarioId")?.setValue(this.authService.getUid());
-        await this.requisicaoService.inserir(this.form.get("requisicao")?.value);
+        await this.requisicaoService.inserir(this.form.value);
         this.toastr.success('Requisição inserida com sucesso.', 'Inserção de Requisição');
       }
       else{
-        await this.requisicaoService.editar(this.form.get("requisicao")?.value);
+        await this.requisicaoService.editar(this.form.value);
         this.toastr.success('Requisição editada com sucesso.', 'Edição de Requisição');
       }
 
@@ -160,9 +159,9 @@ export class RequisicaoComponent implements OnInit {
   }
 
   // public obterFuncionarioLogado() {
-  //   this.authService.authUser()
+  //   this.authService.getAuth()
   //     .subscribe(dados => {
-  //       this.funcionarioService.selecionarFuncionarioLogado(dados?.email)
+  //       this.funcionarioService.selecionarFuncionarioLogado(dados!.email!)
   //         .subscribe(funcionario => {
   //           this.funcionarioLogado = funcionario;
   //         })
