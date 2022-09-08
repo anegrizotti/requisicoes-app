@@ -24,7 +24,7 @@
               <table class="table table-dark table-hover">
                 <thead class="thead-ligth fs-5 text-center">
                   <tr>
-                    <th>Dt. Abertura</th>
+                    <th>Data de Abertura</th>
                     <th>Departamento</th>
                     <th>Descrição</th>
                     <th>Equipamento</th>
@@ -32,7 +32,7 @@
                 </thead>
                 <tbody class="text-center">
                   <tr *ngFor="let requisicao of (requisicoes$ | async)">
-                    <td class="align-middle">{{ requisicao.dataAbertura }}</td>
+                    <td class="align-middle">{{ requisicao.dataAbertura.toDate() | date: "dd/MM/yyyy"}}</td>
                     <td class="align-middle">{{ requisicao.departamento?.nome }}</td>
                     <td class="align-middle">{{ requisicao.descricao }}</td>
                     <td class="align-middle">{{ requisicao.equipamento?.nome }}</td>
@@ -88,19 +88,6 @@
         </div>
 
         <div class="form-group mb-3 position-relative">
-          <label for="descricao" class="form-label">Descrição:</label>
-          <input formControlName="descricao"
-            [ngClass]="(descricao?.touched && descricao?.invalid) ? 'is-invalid' : ''"
-            class="form-control"
-            type="textarea"
-            placeholder="Digite a descrição da requisição">
-            <div class="invalid-tooltip" *ngIf="descricao?.touched && descricao?.invalid">
-              <span *ngIf="descricao?.errors?.['required']" >A descrição precisa ser preenchida</span>
-              <span *ngIf="descricao?.errors?.['minlength']" >A descrição precisa ter no mínimo 5 caracteres</span>
-            </div>
-        </div>
-
-        <div class="form-group mb-3 position-relative">
           <label for="equipamentoId" class="form-label">Equipamento:</label>
           <ng-select formControlName="equipamentoId"
             [ngClass]="(equipamentoId?.touched && equipamentoId?.invalid) ? 'is-invalid' : ''"
@@ -112,9 +99,19 @@
               {{ equipamento.nome }}
             </ng-option>
           </ng-select>
-          <div class="invalid-tooltip" *ngIf="equipamentoId?.touched && equipamentoId?.invalid">
-            <span *ngIf="equipamentoId?.errors?.['required']" >O equipamento precisa ser selecionado</span>
-          </div>
+        </div>
+
+        <div class="form-group mb-3 position-relative">
+          <label for="descricao" class="form-label">Descrição:</label>
+          <textarea formControlName="descricao"
+            [ngClass]="(descricao?.touched && descricao?.invalid) ? 'is-invalid' : ''"
+            class="form-control"
+            type="text"
+            placeholder="Digite a descrição da requisição"></textarea>
+            <div class="invalid-tooltip" *ngIf="descricao?.touched && descricao?.invalid">
+              <span *ngIf="descricao?.errors?.['required']" >A descrição precisa ser preenchida</span>
+              <span *ngIf="descricao?.errors?.['minlength']" >A descrição precisa ter no mínimo 5 caracteres</span>
+            </div>
         </div>
 
       </div>

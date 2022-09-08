@@ -33,7 +33,7 @@ export class FuncionarioService {
     return this.registros.doc(registro.id).delete();
   }
 
-   public selecionarTodos(): Observable<Funcionario[]> {
+  public selecionarTodos(): Observable<Funcionario[]> {
     return this.registros.valueChanges()
       .pipe(
         map((funcionarios: Funcionario[]) => {
@@ -51,8 +51,8 @@ export class FuncionarioService {
       )
   }
 
-  public selecionarFuncionarioLogado(email: string) {
-    return this.firestore.collection<Funcionario>('funcionarios',
+  public selecionarFuncionarioLogado(email: string): Observable<Funcionario> {
+    return this.firestore.collection<Funcionario>("funcionarios",
       ref => ref.where('email', '==', email)).valueChanges()
       .pipe(
         take(1),

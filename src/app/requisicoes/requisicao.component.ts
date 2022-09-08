@@ -1,14 +1,13 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { map, Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AuthenticationService } from '../auth/services/authentication.service';
 import { Departamento } from '../departamentos/models/departamento.model';
 import { DepartamentoService } from '../departamentos/services/departamento.service';
 import { Equipamento } from '../equipamentos/models/equipamento.model';
 import { EquipamentoService } from '../equipamentos/services/equipamento.service';
-import { Funcionario } from '../funcionarios/models/funcionario.model';
 import { FuncionarioService } from '../funcionarios/services/funcionario.service';
 import { Requisicao } from './models/requisicao.model';
 import { RequisicaoService } from './services/requisicao.service';
@@ -17,11 +16,14 @@ import { RequisicaoService } from './services/requisicao.service';
   selector: 'app-requisicao',
   templateUrl: './requisicao.component.html'
 })
-export class RequisicaoComponent implements OnInit {
+export class RequisicaoComponent implements OnInit, OnDestroy {
   public requisicoes$: Observable<Requisicao[]>;
   public departamentos$: Observable<Departamento[]>;
-  funcionarioLogado: Funcionario;
   public equipamentos$: Observable<Equipamento[]>;
+
+  private processoAutenticado$: Subscription;
+
+  funcionarioLogadoId: string;
   public form: FormGroup;
 
   constructor(
@@ -38,28 +40,36 @@ export class RequisicaoComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group({
       id: new FormControl(""),
+      descricao: new FormControl("", [Validators.required, Validators.minLength(5)]),
+      dataAbertura: new FormControl(""),
+
       funcionario: new FormControl(""),
       funcionarioId: new FormControl(""),
-      descricao: new FormControl(""),
-      departamentoId: new FormControl(""),
+
+      departamentoId: new FormControl("", [Validators.required]),
       departamento: new FormControl(""),
-      dataAbertura: new FormControl(""),
+
       equipamento: new FormControl(""),
       equipamentoId: new FormControl(""),
-
     })
-
-    this.requisicoes$ = this.requisicaoService.selecionarTodos()
-      .pipe(
-        map(requisicoes => {
-          return requisicoes
-            .filter(r => r.funcionario?.email === this.funcionarioLogado.email);
-        })
-      )
 
     this.departamentos$ = this.departamentoService.selecionarTodos();
     this.equipamentos$ = this.equipamentoService.selecionarTodos();
+    this.requisicoes$ = this.requisicaoService.selecionarTodos();
 
+    this.processoAutenticado$ = this.authService.usuarioLogado.subscribe(usuario => {
+      const email: string = usuario?.email!;
+
+      this.funcionarioService.selecionarFuncionarioLogado(email)
+        .subscribe(funcionario => {
+          this.funcionarioLogadoId = funcionario.id
+        })
+    })
+
+  }
+
+  ngOnDestroy(): void {
+    this.processoAutenticado$.unsubscribe();
   }
 
   get tituloModal(): string {
@@ -102,9 +112,16 @@ export class RequisicaoComponent implements OnInit {
     return this.form.get("equipamentoId");
   }
 
+  private configurarValoresPadrao(): void {
+    this.form.get("dataAbertura")?.setValue(new Date());
+    this.form.get("equipamentoId")?.setValue(null);
+    this.form.get("funcionarioId")?.setValue(this.funcionarioLogadoId);
+  }
+
 
   public async gravar(modal: TemplateRef<any>, requisicao?: Requisicao) {
     this.form.reset();
+    this.configurarValoresPadrao();
 
     if(requisicao) {
       const departamento = requisicao.departamento ? requisicao.departamento : null;
@@ -125,7 +142,6 @@ export class RequisicaoComponent implements OnInit {
       await this.modalService.open(modal).result;
 
       if(!requisicao) {
-        this.form.get("dataAbertura")?.setValue(new Date(Date.now()).toLocaleString());
         await this.requisicaoService.inserir(this.form.value);
         this.toastr.success('Requisição inserida com sucesso.', 'Inserção de Requisição');
       }
@@ -157,15 +173,5 @@ export class RequisicaoComponent implements OnInit {
         this.toastr.error('Falha ao excluír a requisição.', 'Exclusão de Requisição');
     }
   }
-
-  // public obterFuncionarioLogado() {
-  //   this.authService.getAuth()
-  //     .subscribe(dados => {
-  //       this.funcionarioService.selecionarFuncionarioLogado(dados!.email!)
-  //         .subscribe(funcionario => {
-  //           this.funcionarioLogado = funcionario;
-  //         })
-  //     })
-  // }
 
 }
