@@ -11,6 +11,47 @@
               <i class="pi pi-arrow-left me-2"></i>Voltar
              </a>
           </div>
+
+          <section id="tabela">
+            <div class="card text-bg-dark border-secondary mt-3 rounded-4 w-100 fs-6">
+              <div class="card-body">
+                <table class="table table-dark table-hover">
+                  <thead class="thead-ligth fs-5 text-center">
+                    <tr>
+                      <th>Data de Abertura</th>
+                      <th>Departamento</th>
+                      <th>Descrição</th>
+                      <th>Equipamento</th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-center">
+                    <tr *ngFor="let requisicao of (requisicoes$ | async)">
+                      <td class="align-middle">{{ requisicao.dataAbertura.toDate() | date: "dd/MM/yyyy"}}</td>
+                      <td class="align-middle">{{ requisicao.departamento?.nome }}</td>
+                      <td class="align-middle">{{ requisicao.descricao }}</td>
+                      <td class="align-middle">{{ requisicao.equipamento?.nome }}</td>
+                      <td class="d-grid d-md-block align-middle">
+                        <button
+                          type="button"
+                          (click)="visualizar()"
+                          class="btn btn-outline-info me-0 me-md-1 mb-1 mb-md-auto">
+                          <i class="pi pi-info"></i>
+                        </button>
+
+                        <button
+                          (click)="movimentar()"
+                          type="button"
+                          class="btn btn-warning">
+                          <i class="pi pi-sort-alt"></i>
+                      </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
       </div>
     </div>
   </div>
