@@ -1,12 +1,16 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { Observable, Subscription } from 'rxjs';
 import { AuthenticationService } from 'src/app/auth/services/authentication.service';
 import { Departamento } from 'src/app/departamentos/models/departamento.model';
 import { DepartamentoService } from 'src/app/departamentos/services/departamento.service';
 import { Equipamento } from 'src/app/equipamentos/models/equipamento.model';
 import { EquipamentoService } from 'src/app/equipamentos/services/equipamento.service';
+import { Funcionario } from 'src/app/funcionarios/models/funcionario.model';
 import { FuncionarioService } from 'src/app/funcionarios/services/funcionario.service';
+import { Movimentacao } from '../models/movimentacao.model';
 import { Requisicao } from '../models/requisicao.model';
 import { RequisicaoService } from '../services/requisicao.service';
 
@@ -21,8 +25,9 @@ export class RequisicoesDepartamentoComponent implements OnInit {
 
   private processoAutenticado$: Subscription;
 
-  funcionarioLogadoId: string;
-  departamentoFuncionarioLogadoId: string;
+  public funcionarioLogado: Funcionario;
+  public requisicaoSelecionada: Requisicao;
+  public listaStatus: string[] = ["Aberta", "Processando", "Não Autorizada", "Fechada"]
   public form: FormGroup;
 
   constructor(
@@ -32,22 +37,16 @@ export class RequisicoesDepartamentoComponent implements OnInit {
     private authService: AuthenticationService,
     private departamentoService: DepartamentoService,
     private equipamentoService: EquipamentoService,
+    private toastr: ToastrService,
+    private modalService: NgbModal
   ) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      id: new FormControl(""),
+      status: new FormControl("", [Validators.required]),
       descricao: new FormControl("", [Validators.required, Validators.minLength(5)]),
-      dataAbertura: new FormControl(""),
-
       funcionario: new FormControl(""),
-      funcionarioId: new FormControl(""),
-
-      departamentoId: new FormControl("", [Validators.required]),
-      departamento: new FormControl(""),
-
-      equipamento: new FormControl(""),
-      equipamentoId: new FormControl(""),
+      data: new FormControl("")
     })
 
     this.departamentos$ = this.departamentoService.selecionarTodos();
@@ -58,8 +57,8 @@ export class RequisicoesDepartamentoComponent implements OnInit {
 
       this.funcionarioService.selecionarFuncionarioLogado(email)
         .subscribe(funcionario => {
-          this.departamentoFuncionarioLogadoId = funcionario.departamentoId
-          this.requisicoes$ = this.requisicaoService.selecionarRequisicoesDepartamentoAtual(this.departamentoFuncionarioLogadoId);
+          this.funcionarioLogado = funcionario;
+          this.requisicoes$ = this.requisicaoService.selecionarRequisicoesDepartamentoAtual(funcionario.departamentoId);
         })
     })
 
@@ -67,10 +66,6 @@ export class RequisicoesDepartamentoComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.processoAutenticado$.unsubscribe();
-  }
-
-  get tituloModal(): string {
-    return this.id?.value ? "Edição" : "Inserção";
   }
 
   get id() {
@@ -109,12 +104,52 @@ export class RequisicoesDepartamentoComponent implements OnInit {
     return this.form.get("equipamentoId");
   }
 
-  public visualizar() {
+  get status() {
+    return this.form.get("status");
+  }
+
+  private configurarValoresPadrao(): void {
+    this.form.patchValue({
+      funcionario: this.funcionarioLogado,
+      status: this.requisicaoSelecionada?.status,
+      data: new Date()
+    })
+  }
+
+
+  public async gravar(modal: TemplateRef<any>, requisicao: Requisicao) {
+    this.requisicaoSelecionada = requisicao;
+    this.requisicaoSelecionada.movimentacoes = requisicao.movimentacoes ? requisicao.movimentacoes : [];
+
+    this.form.reset();
+    this.configurarValoresPadrao();
+
+    try {
+      await this.modalService.open(modal).result;
+
+      if(this.form.dirty && this.form.valid) {
+        this.atualizarRequisicao(this.form.value);
+        await this.requisicaoService.editar(this.requisicaoSelecionada);
+        this.toastr.success('Requisição movimentada com sucesso.', 'Movimentação de Requisição');
+      }
+
+    } catch (error: any) {
+
+      if(error === "Ítem inválido" && error != "fechar" && error != "0" && error != "1")
+        this.toastr.error('Falha ao movimentar a requisição', 'Movimentação de Requisição')
+
+      else if(error != "fechar" && error != "0" && error != "1") {
+        this.toastr.error('Falha ao movimentar a requisição', 'Movimentação de Requisição')
+      }
+
+    }
 
   }
 
-  public movimentar() {
-
+  private atualizarRequisicao(movimentacao: Movimentacao) {
+    this.requisicaoSelecionada.movimentacoes.push(movimentacao);
+    this.requisicaoSelecionada.status = this.status?.value;
+    this.requisicaoSelecionada.ultimaAtualizacao = new Date();
   }
 
 }

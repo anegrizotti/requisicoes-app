@@ -32,7 +32,7 @@
                 </thead>
                 <tbody class="text-center">
                   <tr *ngFor="let requisicao of (requisicoes$ | async)">
-                    <td class="align-middle">{{ requisicao.dataAbertura.toDate() | date: "dd/MM/yyyy"}}</td>
+                    <td class="align-middle">{{ requisicao.dataAbertura.toDate() | date: "dd/MM/yyyy HH:mm"}}</td>
                     <td class="align-middle">{{ requisicao.departamento?.nome }}</td>
                     <td class="align-middle">{{ requisicao.descricao }}</td>
                     <td class="align-middle">{{ requisicao.equipamento?.nome }}</td>

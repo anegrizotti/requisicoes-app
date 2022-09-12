@@ -16,7 +16,7 @@ export class RequisicaoService {
     this.registros = this.firestore.collection<Requisicao>("requisicoes");
    }
 
-   public async inserir(registro: Requisicao): Promise<any> {
+  public async inserir(registro: Requisicao): Promise<any> {
     if(!registro)
       return Promise.reject("Ítem inválido");
 
