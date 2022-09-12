@@ -36,8 +36,8 @@
                       <td class="align-middle">{{ requisicao.ultimaAtualizacao.toDate() | date: "dd/MM/yyyy HH:mm" }}</td>
                       <td class="d-grid d-md-block align-middle">
                         <button
+                          [routerLink]="['/requisicoes', requisicao.id]"
                           type="button"
-
                           class="btn btn-outline-info me-0 me-md-1 mb-1 mb-md-auto">
                           <i class="pi pi-info"></i>
                         </button>

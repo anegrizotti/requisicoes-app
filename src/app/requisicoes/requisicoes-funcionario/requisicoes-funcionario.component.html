@@ -38,6 +38,12 @@
                     <td class="align-middle">{{ requisicao.equipamento?.nome }}</td>
                     <td class="d-grid d-md-block align-middle">
                       <button
+                        [routerLink]="['/requisicoes', requisicao.id]"
+                        type="button"
+                        class="btn btn-outline-info me-0 me-md-1 mb-1 mb-md-auto">
+                        <i class="pi pi-info"></i>
+                      </button>
+                      <button
                         type="button"
                         (click)="gravar(modal, requisicao)"
                         class="btn btn-outline-warning me-0 me-md-1 mb-1 mb-md-auto">
@@ -47,7 +53,7 @@
                       <button
                         (click)="excluir(requisicao)"
                         type="button"
-                        class="btn btn-outline-danger">
+                        class="btn btn-outline-danger me-0 me-md-1 mb-1 mb-md-auto">
                         <i class="pi pi-trash"></i>
                     </button>
                     </td>
