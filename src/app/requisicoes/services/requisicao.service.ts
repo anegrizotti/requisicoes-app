@@ -66,23 +66,23 @@ export class RequisicaoService {
       );
   }
 
-  public selecionarRequisicoesFuncionarioAtual(id: string) {
-    return this.selecionarTodos()
-      .pipe(
-        map(requisicoes => {
-          return requisicoes.filter(req => req.funcionarioId === id);
-        })
-      )
-  }
+  // public selecionarRequisicoesFuncionarioAtual(id: string) {
+  //   return this.selecionarTodos()
+  //     .pipe(
+  //       map(requisicoes => {
+  //         return requisicoes.filter(req => req.funcionarioId === id);
+  //       })
+  //     )
+  // }
 
-  public selecionarRequisicoesDepartamentoAtual(id: string) {
-    return this.selecionarTodos()
-      .pipe(
-        map(requisicoes => {
-          return requisicoes.filter(req => req.departamentoId === id);
-        })
-      )
-  }
+  // public selecionarRequisicoesDepartamentoAtual(id: string) {
+  //   return this.selecionarTodos()
+  //     .pipe(
+  //       map(requisicoes => {
+  //         return requisicoes.filter(req => req.departamentoId === id);
+  //       })
+  //     )
+  // }
 
   public selecionarPorId(id: string): Observable<Requisicao> {
     return this.selecionarTodos()

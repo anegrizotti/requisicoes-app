@@ -118,6 +118,7 @@
             placeholder="Digite a data de fabricação do equipamento">
             <div class="invalid-tooltip" *ngIf="dataFabricacao?.touched && dataFabricacao?.invalid">
               <span *ngIf="dataFabricacao?.errors?.['required']" >A data de fabricação precisa ser selecionada</span>
+              <span *ngIf="dataFabricacao?.errors?.['datafutura']" >A data de fabricação não pode ser maior do que hoje</span>
             </div>
         </div>
 
